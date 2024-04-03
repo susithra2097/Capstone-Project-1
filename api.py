@@ -9,7 +9,7 @@ from streamlit_option_menu import option_menu
 import streamlit as st
 from datetime import datetime
 import re
-import plotly.express as px
+
 
 # API connect Function
 
