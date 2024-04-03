@@ -2,7 +2,6 @@ from sqlalchemy import create_engine
 import pandas as pd
 import googleapiclient.discovery
 import googleapiclient.errors
-import pandas as pd
 import mysql.connector
 from mysql.connector import Error
 from streamlit_option_menu import option_menu
