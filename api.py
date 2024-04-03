@@ -345,16 +345,16 @@ elif opt == 'EXTRACT DATA':
                 data_channel = channel_info(id)
                 if data_channel:
                     data_channel = pd.DataFrame(data_channel, index=[0])
-                    #st.write("Channel data:", data_channel)
+                    # st.write("Channel data:", data_channel)
                     
                     video_ids = get_videos_id(id)
-                    #st.write("Video IDs:", video_ids)
+                    # st.write("Video IDs:", video_ids)
                     
                     video_data = pd.DataFrame(get_video_info(video_ids))
-                    #st.write("Video data:", video_data)
+                    # st.write("Video data:", video_data)
                     
                     comment_data = pd.DataFrame(get_comment_info(video_ids))
-                    #st.write("Comment data:", comment_data)
+                    # st.write("Comment data:", comment_data)
                     
                     channel_data_upload(data_channel)
                     video_data_upload(video_data)
@@ -390,94 +390,143 @@ elif opt == 'QUESTIONS':
     query = None
 
     if questions.startswith('1. What are the names of all videos and their corresponding channels?'):
-        query = """
+        try:
+            mycursor.execute("""
                 SELECT Title, Channel_Name 
                 FROM videos
-                """
+            """)
+            df = pd.DataFrame(mycursor.fetchall(), columns=['Title', 'Channel_Name'])
+            st.write(df)
+        except Exception as e:
+            st.error(f"Error: {e}")
+
     elif questions.startswith('2. Which channels have the most number of videos, and how many videos do they have?'):
-        query = """
+        try:
+            mycursor.execute("""
                 SELECT Channel_Name, COUNT(*) AS Video_Count 
                 FROM videos 
                 GROUP BY Channel_Name 
                 ORDER BY Video_Count DESC 
                 LIMIT 10
-                """
+            """)
+            df = pd.DataFrame(mycursor.fetchall(), columns=['Channel_Name', 'Video_Count'])
+            st.write(df)
+            
+            
+        except Exception as e:
+            st.error(f"Error: {e}")
+
     elif questions.startswith('3. What are the top 10 most viewed videos and their respective channels?'):
-        query = """
+        try:
+            mycursor.execute("""
                 SELECT Title, Channel_Name, Views 
                 FROM videos 
                 ORDER BY Views DESC 
                 LIMIT 10
-                """
+            """)
+            df = pd.DataFrame(mycursor.fetchall(), columns=['Title', 'Channel_Name', 'Views'])
+            st.write(df)
+            
+        except Exception as e:
+            st.error(f"Error: {e}")
+
     elif questions.startswith('4. How many comments were made on each video, and what are their corresponding video names?'):
-        query = """
+        try:
+            mycursor.execute("""
                 SELECT v.Title, COUNT(c.Comment_Id) AS Comment_Count
                 FROM videos v
                 LEFT JOIN comments c ON v.Video_Id = c.Video_Id
                 GROUP BY v.Title
-                """
+            """)
+            df = pd.DataFrame(mycursor.fetchall(), columns=['Video_Title', 'Comment_Count'])
+            st.write(df)
+
+            
+        except Exception as e:
+            st.error(f"Error: {e}")
+
     elif questions.startswith('5. Which videos have the highest number of likes, and what are their corresponding channel names?'):
-        query = """
+        try:
+            mycursor.execute("""
                 SELECT Title, Channel_Name, Likes 
                 FROM videos 
                 ORDER BY Likes DESC 
                 LIMIT 10
-                """
+            """)
+            df = pd.DataFrame(mycursor.fetchall(), columns=['Title', 'Channel_Name', 'Likes'])
+            st.write(df)
+
+            
+        except Exception as e:
+            st.error(f"Error: {e}")
+
     elif questions.startswith('6. What is the total number of likes and dislikes for each video, and what are their corresponding video names?'):
-        query = """
+        try:
+            mycursor.execute("""
                 SELECT Title, SUM(Likes) AS Total_Likes, SUM(DisLikes) AS Total_Dislikes 
                 FROM videos 
                 GROUP BY Title
-                """
+            """)
+            df = pd.DataFrame(mycursor.fetchall(), columns=['Title', 'Total_Likes', 'Total_Dislikes'])
+            st.write(df)
+
+            
+        except Exception as e:
+            st.error(f"Error: {e}")
+
     elif questions.startswith('7. What is the total number of views for each channel, and what are their corresponding channel names?'):
-        query = """
+        try:
+            mycursor.execute("""
                 SELECT Channel_Name, SUM(Views) AS Total_Views 
                 FROM videos 
                 GROUP BY Channel_Name 
                 ORDER BY Total_Views DESC 
                 LIMIT 10
-                """
+            """)
+            df = pd.DataFrame(mycursor.fetchall(), columns=['Channel_Name', 'Total_Views'])
+            st.write(df)
+            
+        except Exception as e:
+            st.error(f"Error: {e}")
+
     elif questions.startswith('8. What are the names of all the channels that have published videos in the year 2022?'):
-        query = """
+        try:
+            mycursor.execute("""
                 SELECT DISTINCT Channel_Name 
                 FROM videos 
                 WHERE YEAR(Published_Date) = 2022
-                """
+            """)
+            df = pd.DataFrame(mycursor.fetchall(), columns=['Channel_Name'])
+            st.write(df)
+            
+        except Exception as e:
+            st.error(f"Error: {e}")
+
     elif questions.startswith('9. What is the average duration of all videos in each channel, and what are their corresponding channel names?'):
-        query = """
+        try:
+            mycursor.execute("""
                 SELECT Channel_Name, AVG(Duration) AS Average_Duration 
                 FROM videos 
                 GROUP BY Channel_Name
-                """
+            """)
+            df = pd.DataFrame(mycursor.fetchall(), columns=['Channel_Name', 'Average_Duration'])
+            st.write(df)
+            
+        except Exception as e:
+            st.error(f"Error: {e}")
+
     elif questions.startswith('10. Which videos have the highest number of comments, and what are their corresponding channel names?'):
-        query = """
+        try:
+            mycursor.execute("""
                 SELECT v.Title, v.Channel_Name, COUNT(c.Comment_Id) AS Comment_Count 
                 FROM videos v 
                 LEFT JOIN comments c ON v.Video_Id = c.Video_Id 
-                GROUP BY v.Title, v.Channel_Name 
+                GROUP BY v.Title, v.Channel_Name  -- Include both Title and Channel_Name in the GROUP BY clause
                 ORDER BY Comment_Count DESC 
                 LIMIT 10
-                """
-    
-    if query is not None:
-        try:
-            mycursor.execute(query)
-            df = pd.DataFrame(mycursor.fetchall(), columns=mycursor.column_names)
+            """)
+            df = pd.DataFrame(mycursor.fetchall(), columns=['Video_Title', 'Channel_Name', 'Comment_Count'])
             st.write(df)
-        
-            # Plotting the result if applicable
-            if questions.startswith(('2.', '3.', '5.',  '7.', '10.')):
-                fig = px.bar(df, x=df.columns[0], y=df.columns[1:], title=None)
-                st.plotly_chart(fig)
-            elif questions.startswith(('4.', '6.')):
-                fig = px.pie(df, names=df.columns[1], title=None)
-                st.plotly_chart(fig)
-            elif questions.startswith(('8.', '9.')):
-                fig = px.line(df, x=df.columns[0], y=df.columns[1],
-                  labels={df.columns[0]: 'Number of Comments', df.columns[1]: 'Video id'},
-                  title='Number of Comments on Each Video')
-                st.plotly_chart(fig)
+            
         except Exception as e:
             st.error(f"Error: {e}")
-    else:
-        st.warning("Please select a question.")
