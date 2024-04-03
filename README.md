@@ -1,4 +1,4 @@
-# Capstone-Project-1
+#  Capstone-Project-1
 YouTube Data Harvesting and Analysis
 Overview:
 The YouTube Data Harvesting App is a Python application built to extract, analyze, and visualize data from YouTube channels. It utilizes the YouTube Data API to gather information such as channel details, video metadata, and comments, and stores the extracted data into a MySQL database. The app also provides functionality to perform various analytical queries on the stored data.
