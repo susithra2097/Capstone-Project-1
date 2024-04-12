@@ -61,55 +61,51 @@ analytical queries on the stored data.
 
 **Functions Overview:**
 
--   **API_connect:**
+Functions:
+1.	Api_connect():
+•	Purpose: Establishes a connection to the YouTube Data API using the developer key.
+•	Returns: An instance of the YouTube Data API client.
+2.	channel_info(id):
+•	Purpose: Retrieves information about a YouTube channel based on its ID.
+•	Parameters: id (string) - YouTube channel ID.
+•	Returns: A dictionary containing channel details such as name, ID, subscriber count, views, etc.
+3.	get_videos_id(id):
+•	Purpose: Retrieves video IDs from a YouTube channel's uploads playlist.
+•	Parameters: id (string) - YouTube channel ID.
+•	Returns: A list of video IDs.
+4.	parse_duration(duration_str):
+•	Purpose: Parses duration string (e.g., "PT5M30S") and converts it to seconds.
+•	Parameters: duration_str (string) - Duration string in ISO 8601 format.
+•	Returns: Total duration in seconds.
+5.	get_video_info(video_ids):
+•	Purpose: Retrieves detailed information about videos using their IDs.
+•	Parameters: video_ids (list) - List of YouTube video IDs.
+•	Returns: A list of dictionaries containing video details such as title, description, views, likes, dislikes, etc.
+6.	get_comment_info(video_ids):
+•	Purpose: Retrieves comments for videos using their IDs.
+•	Parameters: video_ids (list) - List of YouTube video IDs.
+•	Returns: A list of dictionaries containing comment details such as comment ID, video ID, text, author, etc.
+7.	get_playlist_details(id):
+•	Purpose: Retrieves details of playlists associated with a YouTube channel.
+•	Parameters: id (string) - YouTube channel ID.
+•	Returns: A list of dictionaries containing playlist details such as ID, title, channel ID, published date, etc.
+8.	sql_create_tables():
+•	Purpose: Creates database tables if they don't exist.
+•	Returns: None.
+9.	channel_data_upload(data_channel):
+•	Purpose: Uploads channel data to a MySQL database.
+•	Parameters: data_channel (DataFrame) - DataFrame containing channel data.
+•	Returns: None.
+10.	video_data_upload(video_data):
+•	Purpose: Uploads video data to a MySQL database.
+•	Parameters: video_data (DataFrame) - DataFrame containing video data.
+•	Returns: None.
 
-    -   Establishes connection with the YouTube Data API using the
-        provided API key.
+11.	comment_data_upload(comment_data):
+•	Purpose: Uploads comment data to a MySQL database.
+•	Parameters: comment_data (DataFrame) - DataFrame containing comment data.
+•	Returns: None.
 
--   **channel_info:**
-
-    -   Retrieves information about a specific YouTube channel,
-        including basic details and related playlists.
-
--   **get_videos_id:**
-
-    -   Retrieves the video IDs from the uploads playlist of a given
-        channel.
-
--   **parse_duration:**
-
-    -   Parses the duration string of a video into total seconds.
-
--   **get_video_info:**
-
-    -   Retrieves detailed information about each video, including
-        metadata and statistics.
-
--   **get_comment_info:**
-
-    -   Retrieves comments for each video using the video IDs.
-
--   **get_playlist_details:**
-
-    -   Retrieves details of all playlists associated with a given
-        channel.
-
--   **sql_create_tables:**
-
-    -   Creates database tables for storing channel data, video data,
-        and comment data.
-
--   **channel_data_upload:**
-
-    -   Uploads channel data to the MySQL database.
-
--   **video_data_upload:**
-
-    -   Uploads video data to the MySQL database.
-
--   **comment_data_upload:**
-
-    -   Uploads comment data to the MySQL database.
 
 **Usage:**
 
